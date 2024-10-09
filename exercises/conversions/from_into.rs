@@ -40,10 +40,34 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.is_empty() {
+            return Person::default();
+        } // 分割字符串并收集到 Vec 中
+        let res: Vec<&str> = s.split(',').collect();
+        if res.len() != 2 {
+            return Person::default();
+        }
+        // 如果 Vec 长度至少为 2，设置 name 和 age
+        let name = res.get(0).unwrap_or(&"").trim().to_string();
+        let age = res
+            .get(1)
+            .unwrap_or(&"")
+            .trim()
+            .parse::<usize>()
+            .unwrap_or_default();
+
+        // 如果 name 为空，返回默认值
+        if name.is_empty() {
+            return Person::default();
+        }
+
+        if age == 0 {
+            return Person::default();
+        }
+
+        Person { name, age }
     }
 }
 
